@@ -1,15 +1,16 @@
 import random
+from time import sleep
 
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotEvent
-from _token import token, id_group
+from _token import token, _id
 
 
 class Bot:
-    def __init__(self, group_id, token):
-        self.group = group_id
-        self.token = token
-        self.vk = vk_api.VkApi(token=token)
+    def __init__(self, id_group, _token):
+        self.group = id_group
+        self.token = _token
+        self.vk = vk_api.VkApi(token=_token)
         self.long_poller = VkBotLongPoll(self.vk, self.group)
         self.api = self.vk.get_api()
 
@@ -23,6 +24,7 @@ class Bot:
 
     def on_event(self, event):
         if event.type == VkBotEventType.MESSAGE_NEW:
+            sleep(2)
             print(event.type)
             print(event)
             peer_id = event.message.peer_id
@@ -40,5 +42,5 @@ class Bot:
 
 
 if __name__ == '__main__':
-    bot = Bot(id_group, token)
+    bot = Bot(_id, _token=token)
     bot.run()
