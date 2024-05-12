@@ -9,13 +9,15 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotEvent
 from _token import token, _id
 import logging
 
+logger = logging.getLogger('bot')
+
 
 def configure_logger():
     """
     Функция для логирования в файл
     :return: bot.log
     """
-    logger = logging.getLogger('bot')
+    # logger = logging.getLogger('bot')
     stream_handler = logging.StreamHandler()
     file_handler = logging.FileHandler('bot_log.log')
     stream_handler.setFormatter(logging.Formatter('%(asctime)s, %(levelname)s, %(message)s'))
