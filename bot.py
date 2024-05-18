@@ -1,15 +1,15 @@
 # python v 3.11
 
+
 import random
 from time import sleep
-from venv import logger
 
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType, VkBotEvent
 from _token import token, _id
 import logging
 
-logger = logging.getLogger('bot')
+log = logging.getLogger('bot')
 
 
 def configure_logger():
@@ -22,10 +22,10 @@ def configure_logger():
     file_handler = logging.FileHandler('bot_log.log')
     stream_handler.setFormatter(logging.Formatter('%(asctime)s, %(levelname)s, %(message)s'))
     file_handler.setFormatter(logging.Formatter('%(asctime)s, %(levelname)s, %(message)s'))
-    logger.addHandler(stream_handler)
-    logger.addHandler(file_handler)
+    log.addHandler(stream_handler)
+    log.addHandler(file_handler)
     stream_handler.setLevel(logging.INFO)
-    logger.setLevel(logging.DEBUG)
+    log.setLevel(logging.DEBUG)
 
 
 configure_logger()
@@ -50,7 +50,7 @@ class Bot:
             try:
                 self.on_event(event)
             except Exception as exc:
-                logger.exception('Exception %s', exc)
+                log.exception('Exception %s', exc)
 
     def on_event(self, event: VkBotEvent):
         """
@@ -60,27 +60,24 @@ class Bot:
         """
         if event.type == VkBotEventType.MESSAGE_NEW:
             sleep(1)
-            logger.info('Event got %s', event)
-            logger.info('we received an event %s', event.type)
+            log.info('Event got %s', event)
+            log.info('we received an event %s', event.type)
             peer_id = event.message.peer_id
             random_id = random.randint(0, 2 ** 20)
             text_message = str(event.message.text)
-            self.api.messages.send(peer_id=peer_id, message=text_message, random_id=random_id)
+            self.api.messages.send(peer_id=peer_id,
+                                   message=text_message,
+                                   random_id=random_id)
             # try:
             #     self.api.messages.send(peer_id=peer_id, messages=text_message, random_id=random_id)
             # except Exception as exception:
             #     print(exception)
 
         else:
-            logger.debug("We don't know how to handle event with type %s", event.type)
+            log.debug("We don't know how to handle event with type %s", event.type)
             raise ValueError("We don't know how to handle event with type %s", event.type)
-
+        #
         # if event.type == VkBotEventType.WALL_POST_NEW:
         #     print(event.type)
         #     print(event)
         #     print(event.message)
-
-
-if __name__ == '__main__':
-    bot = Bot(_id, _token=token)
-    bot.run()
