@@ -24,7 +24,7 @@ def configure_logger():
     file_handler.setFormatter(logging.Formatter('%(asctime)s, %(levelname)s, %(message)s'))
     log.addHandler(stream_handler)
     log.addHandler(file_handler)
-    stream_handler.setLevel(logging.INFO)
+    stream_handler.setLevel(logging.DEBUG  )
     log.setLevel(logging.DEBUG)
 
 
@@ -44,6 +44,7 @@ class Bot:
         self.vk = vk_api.VkApi(token=_token)
         self.long_poller = VkBotLongPoll(self.vk, self.group)
         self.api = self.vk.get_api()
+        self.user_states = dict() # user_id -> UserState
 
     def run(self):
         for event in self.long_poller.listen():
@@ -73,11 +74,16 @@ class Bot:
             # except Exception as exception:
             #     print(exception)
 
-        else:
-            log.debug("We don't know how to handle event with type %s", event.type)
-            raise ValueError("We don't know how to handle event with type %s", event.type)
+        # else:
+        #     log.debug("We don't know how to handle event with type %s", event.type)
+        #     raise ValueError("We don't know how to handle event with type %s", event.type)
         #
         # if event.type == VkBotEventType.WALL_POST_NEW:
         #     print(event.type)
         #     print(event)
         #     print(event.message)
+
+
+if __name__ == '__main__':
+    bot = Bot(_id, _token=token)
+    bot.run()
